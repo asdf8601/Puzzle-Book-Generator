@@ -139,16 +139,17 @@ class SudokuGenerator:
         Returns:
             Dictionary mapping difficulty names to (start, end) ranges
         """
-        # Distribute puzzles across 5 difficulty levels
-        puzzles_per_level = total_puzzles // 5
-        remainder = total_puzzles % 5
+        # Distribute puzzles across 3 difficulty levels
+        levels = ["Medium", "Hard", "Expert"]
+        puzzles_per_level = total_puzzles // len(levels)
+        remainder = total_puzzles % len(levels)
         
         ranges = {}
         current = 1
         
-        for i, level in enumerate(["Very Easy", "Easy", "Medium", "Hard", "Expert"]):
+        for i, level in enumerate(levels):
             # Add extra puzzles to later levels if there's a remainder
-            count = puzzles_per_level + (1 if i >= (5 - remainder) else 0)
+            count = puzzles_per_level + (1 if i >= (len(levels) - remainder) else 0)
             ranges[level] = (current, current + count - 1)
             current += count
             
@@ -204,7 +205,7 @@ class SudokuGenerator:
                 f.write(' '.join(str(x) for x in row) + '\n')
 
     def save_puzzle_image(self, puzzle: List[List[int]], filename: str, 
-                         cell_size: int = 60) -> None:
+                         cell_size: int = 180) -> None:
         """
         Save sudoku puzzle as an image without labels.
         
@@ -223,15 +224,31 @@ class SudokuGenerator:
         draw = ImageDraw.Draw(img)
         
         try:
-            # Try to use a TrueType font
-            bold_font = ImageFont.truetype("arialbd.ttf", cell_size // 2)
+            import os
+            # Try to find a good TrueType font
+            font_paths = [
+                "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+                "/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf",
+                "C:\\Windows\\Fonts\\arialbd.ttf",
+                "arialbd.ttf"
+            ]
+            bold_font = None
+            for p in font_paths:
+                if os.path.exists(p) or p == "arialbd.ttf":
+                    try:
+                        bold_font = ImageFont.truetype(p, int(cell_size * 0.65))
+                        break
+                    except:
+                        pass
+            if bold_font is None:
+                bold_font = ImageFont.load_default()
         except:
             # Fallback to default font
             bold_font = ImageFont.load_default()
         
         # Draw grid lines
         for i in range(10):
-            line_width = 3 if i % 3 == 0 else 1
+            line_width = 5 if i % 3 == 0 else 2
             # Vertical lines
             x = margin + i * cell_size
             draw.line([(x, margin), (x, margin + grid_size)], 
@@ -260,7 +277,7 @@ class SudokuGenerator:
         img.save(filename)
 
     def save_solution_image(self, solution: List[List[int]], puzzle: List[List[int]], 
-                           filename: str, cell_size: int = 60) -> None:
+                           filename: str, cell_size: int = 180) -> None:
         """
         Save sudoku solution as an image with given numbers in black and solved numbers in blue.
         
@@ -280,9 +297,42 @@ class SudokuGenerator:
         draw = ImageDraw.Draw(img)
         
         try:
-            # Try to use a TrueType font
-            font = ImageFont.truetype("arial.ttf", cell_size // 2)
-            bold_font = ImageFont.truetype("arialbd.ttf", cell_size // 2)
+            import os
+            font_paths_reg = [
+                "/System/Library/Fonts/Supplemental/Arial.ttf",
+                "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf",
+                "C:\\Windows\\Fonts\\arial.ttf",
+                "arial.ttf"
+            ]
+            font_paths_bold = [
+                "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+                "/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf",
+                "C:\\Windows\\Fonts\\arialbd.ttf",
+                "arialbd.ttf"
+            ]
+            
+            font = None
+            for p in font_paths_reg:
+                if os.path.exists(p) or p == "arial.ttf":
+                    try:
+                        font = ImageFont.truetype(p, int(cell_size * 0.65))
+                        break
+                    except:
+                        pass
+                        
+            bold_font = None
+            for p in font_paths_bold:
+                if os.path.exists(p) or p == "arialbd.ttf":
+                    try:
+                        bold_font = ImageFont.truetype(p, int(cell_size * 0.65))
+                        break
+                    except:
+                        pass
+                        
+            if font is None:
+                font = ImageFont.load_default()
+            if bold_font is None:
+                bold_font = font
         except:
             # Fallback to default font
             font = ImageFont.load_default()
@@ -290,7 +340,7 @@ class SudokuGenerator:
         
         # Draw grid lines
         for i in range(10):
-            line_width = 3 if i % 3 == 0 else 1
+            line_width = 5 if i % 3 == 0 else 2
             # Vertical lines
             x = margin + i * cell_size
             draw.line([(x, margin), (x, margin + grid_size)], 

@@ -47,16 +47,16 @@ class SudokuBookPDF:
         Returns:
             List of dictionaries containing difficulty information
         """
-        puzzles_per_level = self.total_puzzles // 5
-        remainder = self.total_puzzles % 5
+        levels = ["Medium", "Hard", "Expert"]
+        puzzles_per_level = self.total_puzzles // len(levels)
+        remainder = self.total_puzzles % len(levels)
         
         difficulty_info = []
         current = 1
         
-        levels = ["Very Easy", "Easy", "Medium", "Hard", "Expert"]
         for i, level in enumerate(levels):
             # Add extra puzzles to later levels if there's a remainder
-            count = puzzles_per_level + (1 if i >= (5 - remainder) else 0)
+            count = puzzles_per_level + (1 if i >= (len(levels) - remainder) else 0)
             end = current + count - 1
             
             difficulty_info.append({
@@ -215,11 +215,9 @@ class SudokuBookPDF:
             'Some numbers are already given as clues to get you started.',
             '',
             'Difficulty Levels:',
-            '• Very Easy (Puzzles 1-25): Great for beginners',
-            '• Easy (Puzzles 26-55): Build your confidence',
-            '• Medium (Puzzles 56-90): Test your skills',
-            '• Hard (Puzzles 91-125): Challenge yourself',
-            '• Expert (Puzzles 126-160): Master level puzzles',
+            '• Medium: Test your skills',
+            '• Hard: Challenge yourself',
+            '• Expert: Master level puzzles',
             '',
             'Tips:',
             '• Start with rows, columns, or boxes with the most given numbers',
