@@ -86,20 +86,21 @@ class SudokuGenerator:
         self.solve_sudoku(self.grid)
         return copy.deepcopy(self.grid)
     
-    def remove_numbers(self, grid: List[List[int]], difficulty: int, total_puzzles: int = 160) -> List[List[int]]:
+    def remove_numbers(self, grid: List[List[int]], difficulty: int, total_puzzles: int = 160, levels: Optional[List[str]] = None) -> List[List[int]]:
         """
         Remove numbers from complete grid based on difficulty level.
-        
+
         Args:
             grid: Complete Sudoku solution
             difficulty: Difficulty level (1-total_puzzles)
             total_puzzles: Total number of puzzles to generate
-            
+            levels: List of difficulty level names to use
+
         Returns:
             Puzzle grid with appropriate numbers removed
         """
         # Calculate difficulty ranges based on total puzzles
-        ranges = self.get_difficulty_ranges(total_puzzles)
+        ranges = self.get_difficulty_ranges(total_puzzles, levels)
         
         # Determine which difficulty level this puzzle belongs to
         difficulty_level = self._get_difficulty_level(difficulty, ranges)
@@ -129,18 +130,20 @@ class SudokuGenerator:
         
         return puzzle
 
-    def get_difficulty_ranges(self, total_puzzles: int) -> Dict[str, Tuple[int, int]]:
+    def get_difficulty_ranges(self, total_puzzles: int, levels: Optional[List[str]] = None) -> Dict[str, Tuple[int, int]]:
         """
         Calculate difficulty ranges based on total number of puzzles.
-        
+
         Args:
             total_puzzles: Total number of puzzles
-            
+            levels: List of difficulty level names to use
+
         Returns:
             Dictionary mapping difficulty names to (start, end) ranges
         """
-        # Distribute puzzles across 3 difficulty levels
-        levels = ["Medium", "Hard", "Expert"]
+        # Distribute puzzles across difficulty levels
+        if levels is None:
+            levels = ["Medium", "Hard", "Expert"]
         puzzles_per_level = total_puzzles // len(levels)
         remainder = total_puzzles % len(levels)
         
@@ -171,19 +174,20 @@ class SudokuGenerator:
                 return level
         return "Expert"  # fallback
     
-    def generate_puzzle(self, difficulty: int, total_puzzles: int = 160) -> Tuple[List[List[int]], List[List[int]]]:
+    def generate_puzzle(self, difficulty: int, total_puzzles: int = 160, levels: Optional[List[str]] = None) -> Tuple[List[List[int]], List[List[int]]]:
         """
         Generate a complete puzzle and solution pair.
-        
+
         Args:
             difficulty: Difficulty level (1-total_puzzles)
             total_puzzles: Total number of puzzles to generate
-            
+            levels: List of difficulty level names to use
+
         Returns:
             Tuple of (puzzle, solution) grids
         """
         solution = self.generate_complete_grid()
-        puzzle = self.remove_numbers(solution, difficulty, total_puzzles)
+        puzzle = self.remove_numbers(solution, difficulty, total_puzzles, levels)
         return puzzle, solution
 
     def save_puzzle_text(self, puzzle: List[List[int]], solution: List[List[int]], 
@@ -378,16 +382,17 @@ class SudokuGenerator:
         
         img.save(filename)
 
-    def get_difficulty_name(self, level: int, total_puzzles: int = 160) -> str:
+    def get_difficulty_name(self, level: int, total_puzzles: int = 160, levels: Optional[List[str]] = None) -> str:
         """
         Get difficulty name based on level and total puzzles.
-        
+
         Args:
             level: Puzzle number (1-total_puzzles)
             total_puzzles: Total number of puzzles
-            
+            levels: List of difficulty level names to use
+
         Returns:
             Difficulty level name
         """
-        ranges = self.get_difficulty_ranges(total_puzzles)
+        ranges = self.get_difficulty_ranges(total_puzzles, levels)
         return self._get_difficulty_level(level, ranges)

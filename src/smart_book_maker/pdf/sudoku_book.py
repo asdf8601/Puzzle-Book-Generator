@@ -17,23 +17,29 @@ import uuid
 class SudokuBookPDF:
     """A class for creating professional Sudoku puzzle books in PDF format."""
     
-    def __init__(self, output_filename: str = "Complete_Sudoku_Puzzle_Book.pdf", 
-                 book_title: str = "Sudoku Journey", 
+    def __init__(self, output_filename: str = "Complete_Sudoku_Puzzle_Book.pdf",
+                 book_title: str = "Sudoku Journey",
                  book_subtitle: str = "Brain-Busting Challenges to Sharpen Your Logic",
-                 total_puzzles: int = 160):
+                 total_puzzles: int = 160,
+                 levels: List[str] = None,
+                 include_solutions: bool = True):
         """
         Initialize the Sudoku book PDF generator.
-        
+
         Args:
             output_filename: Name of the output PDF file
             book_title: Main title of the book
             book_subtitle: Subtitle of the book
             total_puzzles: Total number of puzzles in the book
+            levels: List of difficulty level names to use
+            include_solutions: Whether to include solution pages in the book
         """
         self.output_filename = output_filename
         self.book_title = book_title
         self.book_subtitle = book_subtitle
         self.total_puzzles = total_puzzles
+        self.levels = levels if levels is not None else ["Medium", "Hard", "Expert"]
+        self.include_solutions = include_solutions
         self.page_width, self.page_height = 8.5 * inch, 11 * inch
         self.bleed = 0.125 * inch
         self.content_width = self.page_width - 2 * self.bleed
@@ -47,7 +53,7 @@ class SudokuBookPDF:
         Returns:
             List of dictionaries containing difficulty information
         """
-        levels = ["Medium", "Hard", "Expert"]
+        levels = self.levels
         puzzles_per_level = self.total_puzzles // len(levels)
         remainder = self.total_puzzles % len(levels)
         
@@ -155,12 +161,13 @@ class SudokuBookPDF:
             current_page += 1 + puzzle_count  # +1 for divider page
         
         # Solutions section
-        solutions_start = current_page
-        toc_entries.append({
-            'name': 'Solutions',
-            'range': 'All Levels',
-            'page': solutions_start
-        })
+        if self.include_solutions:
+            solutions_start = current_page
+            toc_entries.append({
+                'name': 'Solutions',
+                'range': 'All Levels',
+                'page': solutions_start
+            })
         
         # Draw TOC entries
         c.setFont('Helvetica', 14)
@@ -405,7 +412,8 @@ class SudokuBookPDF:
         self.create_table_of_contents(c)
         self.create_instructions_page(c)
         self.create_puzzle_pages(c, puzzle_dir)
-        self.create_solution_pages(c, solution_dir)
+        if self.include_solutions:
+            self.create_solution_pages(c, solution_dir)
         self.create_closing_page(c)
         
         c.save()

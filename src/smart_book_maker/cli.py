@@ -20,29 +20,31 @@ from smart_book_maker.pdf.maze_book import MazeBookPDF
 from smart_book_maker.utils.file_management import ensure_output_directories, get_sudoku_filenames, get_maze_filenames
 
 
-def generate_sudoku_puzzles(count: int = 160, output_dir: str = "output") -> None:
+def generate_sudoku_puzzles(count: int = 160, output_dir: str = "output", levels: list = None, include_solutions: bool = True) -> None:
     """
     Generate Sudoku puzzles and save them as text and image files.
-    
+
     Args:
         count: Number of puzzles to generate
         output_dir: Output directory for files
+        levels: List of difficulty level names to use
+        include_solutions: Whether to generate solution images
     """
     print(f"Generating {count} Sudoku puzzles...")
-    
+
     # Ensure output directories exist
     ensure_output_directories(output_dir)
-    
+
     generator = SudokuGenerator()
-    
+
     for i in range(1, count + 1):
         print(f'Generating Sudoku {i}/{count}...')
-        
+
         # Generate puzzle and solution
-        puzzle, solution = generator.generate_puzzle(i, count)
-        
+        puzzle, solution = generator.generate_puzzle(i, count, levels)
+
         # Get difficulty name
-        difficulty_name = generator.get_difficulty_name(i, count)
+        difficulty_name = generator.get_difficulty_name(i, count, levels)
         
         # Get filenames
         filenames = get_sudoku_filenames(i, difficulty_name, output_dir)
@@ -50,7 +52,8 @@ def generate_sudoku_puzzles(count: int = 160, output_dir: str = "output") -> Non
         # Save files
         generator.save_puzzle_text(puzzle, solution, filenames["text"])
         generator.save_puzzle_image(puzzle, filenames["puzzle"])
-        generator.save_solution_image(solution, puzzle, filenames["solution"])
+        if include_solutions:
+            generator.save_solution_image(solution, puzzle, filenames["solution"])
         
         print(f'Generated puzzle {i} (Difficulty: {difficulty_name})')
     
@@ -90,18 +93,21 @@ def generate_maze_puzzles(count: int = 160, output_dir: str = "output") -> None:
     print(f"Successfully generated {count} Maze puzzles!")
 
 
-def create_sudoku_book(output_dir: str = "output", filename: str = None, 
+def create_sudoku_book(output_dir: str = "output", filename: str = None,
                        book_title: str = None, book_subtitle: str = None,
-                       total_puzzles: int = 160) -> None:
+                       total_puzzles: int = 160, levels: list = None,
+                       include_solutions: bool = True) -> None:
     """
     Create a Sudoku puzzle book PDF.
-    
+
     Args:
         output_dir: Directory containing puzzle and solution images
         filename: Output PDF filename
         book_title: Custom book title
         book_subtitle: Custom book subtitle
         total_puzzles: Total number of puzzles in the book
+        levels: List of difficulty level names to use
+        include_solutions: Whether to include solution pages in the book
     """
     if filename is None:
         filename = f"{output_dir}/books/Complete_Sudoku_Puzzle_Book.pdf"
@@ -118,7 +124,8 @@ def create_sudoku_book(output_dir: str = "output", filename: str = None,
     os.makedirs(f"{output_dir}/books", exist_ok=True)
     
     # Create the book
-    book = SudokuBookPDF(filename, book_title, book_subtitle, total_puzzles)
+    book = SudokuBookPDF(filename, book_title, book_subtitle, total_puzzles,
+                         levels=levels, include_solutions=include_solutions)
     book.create_book(f"{output_dir}/puzzles", f"{output_dir}/solutions")
 
 
@@ -168,6 +175,8 @@ Examples:
     sudoku_gen_parser = generate_subparsers.add_parser('sudoku', help='Generate Sudoku puzzles')
     sudoku_gen_parser.add_argument('--count', type=int, default=160, help='Number of puzzles to generate')
     sudoku_gen_parser.add_argument('--output-dir', default='output', help='Output directory')
+    sudoku_gen_parser.add_argument('--levels', default='Medium,Hard,Expert', help='Comma-separated difficulty levels (e.g. Easy,Medium,Hard,Expert)')
+    sudoku_gen_parser.add_argument('--no-solutions', action='store_true', help='Omit solution images')
     
     # Generate Maze
     maze_gen_parser = generate_subparsers.add_parser('maze', help='Generate Maze puzzles')
@@ -185,6 +194,8 @@ Examples:
     sudoku_book_parser.add_argument('--title', help='Custom book title')
     sudoku_book_parser.add_argument('--subtitle', help='Custom book subtitle')
     sudoku_book_parser.add_argument('--total-puzzles', type=int, default=160, help='Total number of puzzles')
+    sudoku_book_parser.add_argument('--levels', default='Medium,Hard,Expert', help='Comma-separated difficulty levels (e.g. Easy,Medium,Hard,Expert)')
+    sudoku_book_parser.add_argument('--no-solutions', action='store_true', help='Omit solution pages from the book')
     
     # Create Maze book
     maze_book_parser = create_subparsers.add_parser('maze-book', help='Create Maze book PDF')
@@ -202,6 +213,8 @@ Examples:
     all_sudoku_parser.add_argument('--filename', help='Output PDF filename')
     all_sudoku_parser.add_argument('--title', help='Custom book title')
     all_sudoku_parser.add_argument('--subtitle', help='Custom book subtitle')
+    all_sudoku_parser.add_argument('--levels', default='Medium,Hard,Expert', help='Comma-separated difficulty levels (e.g. Easy,Medium,Hard,Expert)')
+    all_sudoku_parser.add_argument('--no-solutions', action='store_true', help='Omit solution pages from the book')
     
     # All Maze
     all_maze_parser = all_subparsers.add_parser('maze', help='Generate Maze puzzles and create book')
@@ -218,7 +231,9 @@ Examples:
     try:
         if args.command == 'generate':
             if args.puzzle_type == 'sudoku':
-                generate_sudoku_puzzles(args.count, args.output_dir)
+                levels = [l.strip() for l in args.levels.split(',')]
+                generate_sudoku_puzzles(args.count, args.output_dir, levels,
+                                       include_solutions=not args.no_solutions)
             elif args.puzzle_type == 'maze':
                 generate_maze_puzzles(args.count, args.output_dir)
             else:
@@ -226,10 +241,13 @@ Examples:
         
         elif args.command == 'create':
             if args.book_type == 'sudoku-book':
-                create_sudoku_book(args.output_dir, args.filename, 
+                levels = [l.strip() for l in args.levels.split(',')]
+                create_sudoku_book(args.output_dir, args.filename,
                                  getattr(args, 'title', None),
                                  getattr(args, 'subtitle', None),
-                                 getattr(args, 'total_puzzles', 160))
+                                 getattr(args, 'total_puzzles', 160),
+                                 levels=levels,
+                                 include_solutions=not args.no_solutions)
             elif args.book_type == 'maze-book':
                 create_maze_book(args.output_dir, args.filename)
             else:
@@ -237,11 +255,15 @@ Examples:
         
         elif args.command == 'all':
             if args.all_type == 'sudoku':
-                generate_sudoku_puzzles(args.count, args.output_dir)
+                levels = [l.strip() for l in args.levels.split(',')]
+                generate_sudoku_puzzles(args.count, args.output_dir, levels,
+                                       include_solutions=not args.no_solutions)
                 create_sudoku_book(args.output_dir, args.filename,
                                  getattr(args, 'title', None),
                                  getattr(args, 'subtitle', None),
-                                 args.count)
+                                 args.count,
+                                 levels=levels,
+                                 include_solutions=not args.no_solutions)
             elif args.all_type == 'maze':
                 generate_maze_puzzles(args.count, args.output_dir)
                 create_maze_book(args.output_dir, args.filename)
